@@ -1,0 +1,26 @@
+begin
+    total = 0;
+    count = 0;
+	average=0;
+    while (count < 5) do
+        read(num);
+
+        if (num < 0) then
+            break;
+        endif;
+
+        if (num % 2 == 0) then
+            continue;
+        endif;
+
+        total = total + num;
+        count = count + 1;
+    endwhile;
+    if (count > 0) then
+        average = total / count;
+    endif;
+
+    write(total);
+    write(average);
+end;
+

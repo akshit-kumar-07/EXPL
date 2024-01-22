@@ -1,0 +1,7 @@
+begin
+	read(a);
+	if(a+b) then
+		write(a);
+	endif;
+	write(a);
+end;
