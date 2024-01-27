@@ -1,0 +1,7 @@
+decl
+    int sum;
+enddecl
+begin
+    read(sum);
+    write(sum);
+end;
