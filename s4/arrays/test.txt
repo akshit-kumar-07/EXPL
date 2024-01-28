@@ -1,0 +1,18 @@
+decl
+    int num[10], i;
+    str mesg;
+enddecl
+begin
+    mesg = "good bye";
+    i = 0;
+    while(i < 10) do
+        read(num[i]);
+        i = i + 1;
+    endwhile;
+    i = 0;
+    while(i < 10) do
+        write(num[i]);
+        i = i + 1;
+    endwhile;
+    write(mesg);
+end;

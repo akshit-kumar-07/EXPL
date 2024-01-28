@@ -1,0 +1,11 @@
+decl
+	int num;
+enddecl;
+begin
+	read(num);
+	if((num%2)==0) then
+		write("num is even");
+	else
+		write("num is odd");
+	endif;
+end;
