@@ -1,0 +1,11 @@
+decl
+	int n;
+	int n;
+enddecl;
+begin
+	n=1;
+	while(n<=100) do
+		write(n);
+		n=n+1;
+	endwhile;
+end;
