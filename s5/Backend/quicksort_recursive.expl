@@ -4,7 +4,7 @@ decl
   int readarr(int temp);
   int writearr(int temp);
   int partition (int low, int high);
-  int quicksort(int low,int high);
+  int quicksort(int low,int mid, int high);
 enddecl
 
 int swap(int index ,int newindex)
@@ -86,7 +86,7 @@ int partition (int low, int high)
 
 
 
-int quicksort (int low , int high)
+int quicksort (int low , int mid, int high)
 {
   decl
     int pp,temp,t;
@@ -96,8 +96,7 @@ int quicksort (int low , int high)
 
     if (low < high) then
       pp = partition (low , high);
-      temp = quicksort(pp+1,high);
-      t = quicksort(low , pp-1);
+      temp = quicksort(pp+1, quicksort(low, 0,pp-1), high);
     endif;
 
     return 1;
@@ -115,7 +114,7 @@ int main()
 
     read(n);
     junk = readarr(n);
-    temp = quicksort(0,n-1);
+    temp = quicksort(0,0,n-1);
     junk = writearr(n);
 
     return junk;

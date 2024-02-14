@@ -126,8 +126,8 @@ FDef : Type ID '(' ParamList ')' '{' LDeclBlock Body '}'
         }
 
         //Check for parameters and arguments
-        argList1 = Phead; //arguments
-        argList2 = Gtemp->paramlist; //formal parameters
+        argList1 = Phead; //defined parameters
+        argList2 = Gtemp->paramlist; //declared parameters
 
         //check for type compatibility
         while(argList1 != NULL && argList2 != NULL)
@@ -385,9 +385,33 @@ expr : expr PLUS expr	{
      ;
 
 func: ID '(' ExprList ')'   {
+                                if($3->type == TYPE_BOOL)
+                                {
+                                    yyerror("Type INT Expression expected in function argument in line %d\n",lineno);
+                                    exit(1);
+
+                                }
                                 assignType($1, 1);
                                 $1->nodetype = NODE_FUNC;
                                 $1->ptr1 = reverseList($3);
+                                $1->ptr3 = (GLookup($1->name))->paramlist;
+                                struct ASTNode *args = $1->ptr1;
+                                struct Paramstruct *params = $1->ptr3;
+                                while(args != NULL && params != NULL)
+                                {
+                                    if(args->type != params->type)
+                                    {
+                                        yyerror("Type mismatch\n");
+                                        exit(1);
+                                    }
+                                    args = args->arglist;
+                                    params = params->next;
+                                }
+                                if(args != NULL || params != NULL)
+                                {
+                                    yyerror("Incorrect number of arguments on function invocation\n");
+                                    exit(1);
+                                }
                                 $$ = $1;
                             }
 
@@ -416,6 +440,22 @@ id: ID                  {
   ;
 
 %%
+
+
+void typecheck_runtime(struct ASTNode *t)
+{
+    struct ASTNode *head = t;
+    int count =0;
+    while(t!= NULL)
+    {
+                if(t->type != GLookup(t->name)->type)
+                {
+                    yyerror("Error in typechecking runtime of function %d\n",lineno);
+                    exit(1);
+                }
+                t = t->arglist;
+    }
+}
 
 yyerror(char const *s, char const *var) {
     printf("\033[0;31mERR:%d\033[0m : ", lineno);

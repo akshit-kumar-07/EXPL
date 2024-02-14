@@ -1,31 +1,14 @@
 decl
- int fun(int x),a;
+ int fun(int x, str y), a;
+ str y;
 enddecl
 
-int fun(int x)
+int fun(int x, str y)
 {
  begin
   if(x >= 91) then
    a = 91;
   else
-   a = fun(fun(x+11));
-  endif;
-
-  return a;
+   a = fun(fun(x+11,a));
+  endif
  end
-}
-
-int main()
-{
- decl
-  int b,c;
- enddecl
-
- begin
-  read(b);
-  c = fun(b);
-  write(c);
-
-  return 0;
- end
-}

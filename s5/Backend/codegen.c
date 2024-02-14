@@ -337,13 +337,8 @@ int codegen(struct ASTNode* t) {
 
             r1 = status + 1;
             fprintf(intermediate, "POP R%d\n", r1); // for return value
-            if (status == -1)
-                r2 = getReg();
 
             popArguments(t->ptr1); // Pop Arguments
-
-            if (status == -1)
-                freeReg();
 
             for (i = status; i >= 0; i--)
                 fprintf(intermediate, "POP R%d\n", i);

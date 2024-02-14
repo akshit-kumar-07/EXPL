@@ -594,8 +594,8 @@ static const yytype_int16 yyrline[] =
      273,   274,   275,   276,   277,   278,   279,   280,   283,   287,
      293,   298,   301,   304,   307,   310,   316,   320,   321,   324,
      328,   332,   336,   340,   344,   348,   352,   356,   360,   364,
-     368,   372,   376,   377,   378,   382,   383,   384,   387,   394,
-     398,   402,   406
+     368,   372,   376,   377,   378,   382,   383,   384,   387,   418,
+     422,   426,   430
 };
 #endif
 
@@ -1411,8 +1411,8 @@ yyreduce:
         }
 
         //Check for parameters and arguments
-        argList1 = Phead; //arguments
-        argList2 = Gtemp->paramlist; //formal parameters
+        argList1 = Phead; //defined parameters
+        argList2 = Gtemp->paramlist; //declared parameters
 
         //check for type compatibility
         while(argList1 != NULL && argList2 != NULL)
@@ -1869,43 +1869,67 @@ yyreduce:
   case 78: /* func: ID '(' ExprList ')'  */
 #line 387 "parser.y"
                             {
+                                if((yyvsp[-1].nptr)->type == TYPE_BOOL)
+                                {
+                                    yyerror("Type INT Expression expected in function argument in line %d\n",lineno);
+                                    exit(1);
+
+                                }
                                 assignType((yyvsp[-3].nptr), 1);
                                 (yyvsp[-3].nptr)->nodetype = NODE_FUNC;
                                 (yyvsp[-3].nptr)->ptr1 = reverseList((yyvsp[-1].nptr));
+                                (yyvsp[-3].nptr)->ptr3 = (GLookup((yyvsp[-3].nptr)->name))->paramlist;
+                                struct ASTNode *args = (yyvsp[-3].nptr)->ptr1;
+                                struct Paramstruct *params = (yyvsp[-3].nptr)->ptr3;
+                                while(args != NULL && params != NULL)
+                                {
+                                    if(args->type != params->type)
+                                    {
+                                        yyerror("Type mismatch\n");
+                                        exit(1);
+                                    }
+                                    args = args->arglist;
+                                    params = params->next;
+                                }
+                                if(args != NULL || params != NULL)
+                                {
+                                    yyerror("Incorrect number of arguments on function invocation\n");
+                                    exit(1);
+                                }
                                 (yyval.nptr) = (yyvsp[-3].nptr);
                             }
-#line 1878 "parser.tab.c"
+#line 1902 "parser.tab.c"
     break;
 
   case 79: /* id: ID  */
-#line 394 "parser.y"
+#line 418 "parser.y"
                         {
                             assignType((yyvsp[0].nptr), 0);
                             (yyval.nptr) = (yyvsp[0].nptr);
                         }
-#line 1887 "parser.tab.c"
+#line 1911 "parser.tab.c"
     break;
 
   case 80: /* id: ID '[' NUM ']'  */
-#line 398 "parser.y"
+#line 422 "parser.y"
                         {
                             assignType((yyvsp[-3].nptr), 2);
                             (yyval.nptr) = TreeCreate((yyvsp[-3].nptr)->type, NODE_ARRAY, NULL, NULL, NULL, (yyvsp[-3].nptr), (yyvsp[-1].nptr), NULL);
                         }
-#line 1896 "parser.tab.c"
+#line 1920 "parser.tab.c"
     break;
 
   case 81: /* id: ID '[' id ']'  */
-#line 402 "parser.y"
+#line 426 "parser.y"
                         {
                             assignType((yyvsp[-3].nptr), 2);
                             (yyval.nptr) = TreeCreate((yyvsp[-3].nptr)->type, NODE_ARRAY, NULL, NULL, NULL, (yyvsp[-3].nptr), (yyvsp[-1].nptr), NULL);
                         }
-#line 1905 "parser.tab.c"
+#line 1929 "parser.tab.c"
     break;
 
   case 82: /* id: ID '[' expr ']'  */
-#line 407 "parser.y"
+#line 431 "parser.y"
     {
         if((yyvsp[-1].nptr)->type!=TYPE_INT)
         {
@@ -1915,11 +1939,11 @@ yyreduce:
         assignType((yyvsp[-3].nptr), 2);
         (yyval.nptr) = TreeCreate((yyvsp[-3].nptr)->type, NODE_ARRAY, NULL, NULL, NULL, (yyvsp[-3].nptr), (yyvsp[-1].nptr), NULL);
        }
-#line 1919 "parser.tab.c"
+#line 1943 "parser.tab.c"
     break;
 
 
-#line 1923 "parser.tab.c"
+#line 1947 "parser.tab.c"
 
       default: break;
     }
@@ -2112,8 +2136,24 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 418 "parser.y"
+#line 442 "parser.y"
 
+
+
+void typecheck_runtime(struct ASTNode *t)
+{
+    struct ASTNode *head = t;
+    int count =0;
+    while(t!= NULL)
+    {
+                if(t->type != GLookup(t->name)->type)
+                {
+                    yyerror("Error in typechecking runtime of function %d\n",lineno);
+                    exit(1);
+                }
+                t = t->arglist;
+    }
+}
 
 yyerror(char const *s, char const *var) {
     printf("\033[0;31mERR:%d\033[0m : ", lineno);
