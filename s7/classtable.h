@@ -9,7 +9,7 @@ struct Memberfunclist {
 
 struct Classtable {
     char *name;                         //name of the class
-    int classIndex;                     //position of the class in the virtual function table
+    int classIndex;                     //position of the class in the class table
     int fieldCount;                     //count of fields
     int methodCount;                    //count of methods
     struct Fieldlist *memberfield;      //pointer to Fieldlist 
