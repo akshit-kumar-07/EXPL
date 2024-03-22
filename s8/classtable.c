@@ -68,6 +68,7 @@ void Class_Minstall(struct Classtable *cptr, char *name, struct Typetable *type,
         }
 
         mtemp->flabel = classFuncLabelCount++; //assign a new label to the overriding function
+        return;
     }
 
     mtemp = (struct Memberfunclist*)malloc(sizeof(struct Memberfunclist));
