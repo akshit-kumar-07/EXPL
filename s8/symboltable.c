@@ -74,6 +74,7 @@ void LInstall(char *name, struct Typetable *type) {
     temp->name = (char*)malloc(sizeof(name));
     strcpy(temp->name, name);
     temp->type = type;
+    temp->next = NULL;
     temp->binding = localBindingStart;
 
     //Since self takes up two words(class variables have two words allocated to them in this stage)

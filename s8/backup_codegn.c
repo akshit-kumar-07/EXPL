@@ -1,4 +1,4 @@
-int counter = -1, j, label=0;
+int counter = -1, i, j, label=0;
 int whileStart = -1, whileEnd = -1;
 int nodeNewFuncPtrReg = -1;
 struct Lsymbol* Ltemp;
@@ -99,7 +99,7 @@ int getMemoryAddress(struct ASTNode* t) {
 }
 
 int codegen(struct ASTNode* t) {
-    int r1, r2,i, r3, l1, l2, number, status=0;
+    int r1, r2, r3, l1, l2, number, status=0;
     int prevWhileStart, prevWhileEnd;
 
     if(t == NULL) {
@@ -201,21 +201,21 @@ int codegen(struct ASTNode* t) {
             fprintf(intermediate, "NE R%d, R%d\n", r1, r2);
             freeReg();
             return r1;
-         case NODE_ASSGN:
+        case NODE_ASSGN:
             r1 = getMemoryAddress(t->ptr1);
             r2 = codegen(t->ptr2);
-            fprintf(intermediate, "MOV [R%d], R%d\n", r1, r2); //in case of new node, this location holds the location of the heap memory allocated. we also need to assign an extra word to hold the address of the virtual function pointer table 
+            fprintf(intermediate, "MOV [R%d], R%d\n", r1, r2);
 
             if(t->ptr2->nodetype == NODE_NEW) {
-                fprintf(intermediate, "ADD R%d, 1\n", r1); //add an extra bit of static memory to hold the address of the virtual function pointer table
-                fprintf(intermediate, "MOV [R%d], R%d\n", r1, nodeNewFuncPtrReg); 
+                fprintf(intermediate, "ADD R%d, 1\n", r1);
+                fprintf(intermediate, "MOV [R%d], R%d\n", r1, nodeNewFuncPtrReg);
                 freeReg();
             } else if(t->ptr1->Ctype != NULL) {
                 r3 = getMemoryAddress(t->ptr2);
-                fprintf(intermediate, "ADD R%d, 1\n", r3); //move to the VFT of the class type getting declared
-                fprintf(intermediate, "ADD R%d, 1\n", r1); //move to the VFT slot of the new object
+                fprintf(intermediate, "ADD R%d, 1\n", r3);
+                fprintf(intermediate, "ADD R%d, 1\n", r1);
                 fprintf(intermediate, "MOV R%d, [R%d]\n", r3, r3);
-                fprintf(intermediate, "MOV [R%d], R%d\n", r1, r3); //copy :)
+                fprintf(intermediate, "MOV [R%d], R%d\n", r1, r3);
                 freeReg();
             }
 
@@ -321,10 +321,8 @@ int codegen(struct ASTNode* t) {
             counter = status;
             r1 = getReg();
 
-
-            //In case of inheritance, the new function will also set the VFT of the corresponding class
-
-            r2 = getReg();
+            // Virtual Function Table Pointer
+            r2 = getReg();    
             nodeNewFuncPtrReg = r2;
             fprintf(intermediate, "MOV R%d, %d\n", r2, 4096 + 8*(t->ptr1->Ctype->classIndex));
 

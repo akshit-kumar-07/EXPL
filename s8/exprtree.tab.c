@@ -94,7 +94,7 @@
         int declCount = 0, defCount = 0; // Definition and Declaration count of functions
 		struct ASTNode *tempASTNode;
         // For testing
-        int testing = 1; // can use to test ASTree
+        int testing = 0; // can use to test ASTree
         struct ASTNode *tempASTNode;
 
 #line 101 "exprtree.tab.c"
