@@ -74,11 +74,6 @@ void assignType(struct ASTNode* node, int code) {
     } else {
         Gtemp = GLookup(node->name);
         if(Gtemp != NULL) {
-        	if(code == 0 && Gtemp->size == -1)
-        	{
-        		yyerror("invalid use of function name\n");
-        		exit(1);
-        	}
             node->Gentry = Gtemp;
             node->type = Gtemp->type;
             node->Ctype = Gtemp->Ctype;

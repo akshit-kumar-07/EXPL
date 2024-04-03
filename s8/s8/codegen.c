@@ -202,13 +202,6 @@ int codegen(struct ASTNode* t) {
             freeReg();
             return r1;
          case NODE_ASSGN:
-         	//printf("nodetype for the var is %d\n",t->ptr1->nodetype);
-         	/*if(t->ptr1->nodetype == 5 && t->ptr1->Gentry->size > 1 )
-         	{
-         		yyerror("Cannot do an assignment to an array\n");
-         		exit(1);
-         	}*/
-         	//printf("The nodetype corresponding to the lhs is %d\n",t->nodetype);
             r1 = getMemoryAddress(t->ptr1);
             r2 = codegen(t->ptr2);
             fprintf(intermediate, "MOV [R%d], R%d\n", r1, r2); //in case of new node, this location holds the location of the heap memory allocated. we also need to assign an extra word to hold the address of the virtual function pointer table 

@@ -68,7 +68,6 @@ void Class_Minstall(struct Classtable *cptr, char *name, struct Typetable *type,
         }
 
         mtemp->flabel = classFuncLabelCount++; //assign a new label to the overriding function
-        return;
     }
 
     mtemp = (struct Memberfunclist*)malloc(sizeof(struct Memberfunclist));
@@ -117,7 +116,7 @@ void Class_Finstall(struct Classtable *cptr, struct Typetable *type, struct Clas
 
     cptr->fieldCount++;
 
-    if(Ctype != NULL) cptr->fieldCount++;
+    //if(Ctype != NULL) cptr->fieldCount++;
 
     if(cptr->fieldCount == 8) 
     {
@@ -137,8 +136,8 @@ void Class_Finstall(struct Classtable *cptr, struct Typetable *type, struct Clas
         {
             fieldIter = fieldIter->next;
         }
-        if(fieldIter->Ctype != NULL) ftemp->fieldIndex = fieldIter->fieldIndex + 2;
-        else
+        //if(fieldIter->Ctype != NULL) ftemp->fieldIndex = fieldIter->fieldIndex + 2;
+        //else
         ftemp->fieldIndex = fieldIter->fieldIndex + 1;
         fieldIter->next = ftemp;
     }
@@ -271,39 +270,3 @@ struct Classtable* CInstall(char *name, char *parent_class_name) {
 
     return Ctemp;
 }
-
-void printClass() {
-    struct Classtable *classPtr = Chead;
-
-    // Iterate through each class
-    while (classPtr != NULL) {
-        printf("Class: %s\n", classPtr->name);
-        printf("    Index in VTable: %d\n", classPtr->classIndex);
-        printf("    Field count: %d\n", classPtr->fieldCount);
-        printf("    Method count: %d\n", classPtr->methodCount);
-        
-        struct Memberfunclist *methodPtr = classPtr->Vfuncptr;
-
-        // Iterate through each member function
-        while (methodPtr != NULL) {
-            printf("    Function: %s\n", methodPtr->name);
-            printf("        Position: %d\n", methodPtr->funcPosition);
-            printf("        Label: %d\n", methodPtr->flabel);
-            printf("        Type: %p\n", (void *)methodPtr->type);
-            // Print parameters if any
-            if (methodPtr->paramlist != NULL) {
-                printf("        Parameters:\n");
-                struct Paramstruct *paramPtr = methodPtr->paramlist;
-                while (paramPtr != NULL) {
-                    printf("            %s: %p\n", paramPtr->name, (void *)paramPtr->type);
-                    paramPtr = paramPtr->next;
-                }
-            }
-            methodPtr = methodPtr->next;
-        }
-        printf("\n");
-
-        classPtr = classPtr->next;
-    }
-}
-

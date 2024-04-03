@@ -30,4 +30,3 @@ void Class_Finstall(struct Classtable *cptr, struct Typetable *type, struct Clas
 void Class_Minstall(struct Classtable *cptr, char *name, struct Typetable *type, struct Paramstruct *paramlist);
 struct Memberfunclist* copyClassMethod(struct Classtable *Ctemp);
 struct Fieldlist* copyClassFields(struct Classtable *Ctemp);
-void printClass();

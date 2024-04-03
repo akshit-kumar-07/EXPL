@@ -1,0 +1,66 @@
+class A {
+    decl
+        int temp;
+    enddecl
+
+    int f0(int x) {
+        begin
+            if (x > 0) then
+                self.temp = self.f0(x - 1);
+            endif;
+
+            write("Class A f0 hi");
+
+            return 1;
+        end
+    }
+};
+
+class B {
+    decl
+        int temp;
+        A aObj;
+    enddecl
+
+    int f1() {
+        begin
+            write("In class B f1");
+            self.aObj = new (A);
+            self.temp = self.aObj.f0(3);
+            return 1;
+        end
+    }
+};
+
+class C {
+    decl
+        int temp;
+        B bObj;
+    enddecl
+
+    int f2() {
+        begin
+            write("In class C f2");
+            self.bObj = new (B);
+            self.temp = self.bObj.f1();
+            return 1;
+        end
+    }
+};
+
+decl C obj;
+enddecl
+
+int main() {
+    decl
+        int temp;
+    enddecl
+
+    begin
+        temp = initialize();
+        obj = new (C);
+        temp = obj.f2();
+        return 1;
+    end
+}
+

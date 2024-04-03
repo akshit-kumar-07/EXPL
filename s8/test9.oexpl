@@ -1,0 +1,13 @@
+decl
+  str s1[5]; 
+enddecl
+
+int main() {
+  decl
+  enddecl
+  begin
+      initialize();
+      s1 = "Hi";
+      return 0;
+  end
+}

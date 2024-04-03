@@ -95,8 +95,8 @@ FieldDecl: FieldType ID ';' {
                             }
          ;
 
-ClassDefBlock: CLASS ClassDefList ENDCLASS {initialize(); if(testing) printClass();}
-             |                             {initialize(); if(testing) printClass();}
+ClassDefBlock: CLASS ClassDefList ENDCLASS {initialize();}
+             |                             {initialize();}
              ;
 
 ClassDefList: ClassDefList ClassDef
@@ -551,7 +551,6 @@ OutputStmt: WRITE '(' expr ')' ';'  {$$ = TreeCreate(TLookup("void"), NODE_WRITE
           ;
 
 AsgStmt: id ASSGN expr ';'          {
-										
                                         typecheck($1->type, $3->type, '=');
                                         classTypecheck($1->Ctype, $3->Ctype);
                                         $$ = TreeCreate(TLookup("void"), NODE_ASSGN, NULL, NULL, NULL, $1, $3, NULL);
@@ -701,11 +700,6 @@ expr : expr PLUS expr	{
      ;
 
 func: ID '(' ExprList ')'   {
-								if($3 == NULL)
-								{
-									yyerror("Incorrect function invocation\n");
-									exit(1);
-								}
                                 if($3->type == TLookup("boolean"))
                                 {
                                     yyerror("Type INT Expression expected in function argument in line %d\n",lineno);
